@@ -581,8 +581,11 @@ endfunction
 if !exists("*s:CreatePathForUrlUnderCursor")
   function s:CreatePathForUrlUnderCursor()
       let l:url = s:Markdown_GetUrlForPosition(line('.'), col('.'))
+      let l:dir = fnamemodify(l:url, ':p:h')
       if l:url != ''
-          execute 'edit' l:url
+	    if !isdirectory(l:dir)
+		  call mkdir(l:dir, "p")
+        execute 'edit' l:url
       else
           echomsg 'The cursor is not on a link.'
       endif
@@ -594,6 +597,7 @@ endif
 if !exists("*s:EditUrlUnderCursor")
   function s:EditUrlUnderCursor()
       let l:url = s:Markdown_GetUrlForPosition(line('.'), col('.'))
+
       if l:url != ''
           execute 'edit' l:url
       else
