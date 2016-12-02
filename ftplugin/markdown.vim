@@ -578,6 +578,19 @@ endfunction
 
 " We need a definition guard because we invoke 'edit' which will reload this
 " script while this function is running. We must not replace it.
+if !exists("*s:CreatePathForUrlUnderCursor")
+  function s:CreatePathForUrlUnderCursor()
+      let l:url = s:Markdown_GetUrlForPosition(line('.'), col('.'))
+      if l:url != ''
+          execute 'edit' l:url
+      else
+          echomsg 'The cursor is not on a link.'
+      endif
+  endfunction
+endif
+
+" We need a definition guard because we invoke 'edit' which will reload this
+" script while this function is running. We must not replace it.
 if !exists("*s:EditUrlUnderCursor")
   function s:EditUrlUnderCursor()
       let l:url = s:Markdown_GetUrlForPosition(line('.'), col('.'))
@@ -612,6 +625,7 @@ call <sid>MapNormVis('<Plug>Markdown_MoveToParentHeader', '<sid>MoveToParentHead
 call <sid>MapNormVis('<Plug>Markdown_MoveToCurHeader', '<sid>MoveToCurHeader')
 nnoremap <Plug>Markdown_OpenUrlUnderCursor :call <sid>OpenUrlUnderCursor()<cr>
 nnoremap <Plug>Markdown_EditUrlUnderCursor :call <sid>EditUrlUnderCursor()<cr>
+nnoremap <Plug>Markdown_CreatePathForUrlUnderCursor :call <sid>CreatePathForUrlUnderCursor()<cr>
 
 if !get(g:, 'vim_markdown_no_default_key_mappings', 0)
     call <sid>MapNotHasmapto(']]', 'Markdown_MoveToNextHeader')
@@ -622,6 +636,7 @@ if !get(g:, 'vim_markdown_no_default_key_mappings', 0)
     call <sid>MapNotHasmapto(']c', 'Markdown_MoveToCurHeader')
     call <sid>MapNotHasmapto('gx', 'Markdown_OpenUrlUnderCursor')
     call <sid>MapNotHasmapto('ge', 'Markdown_EditUrlUnderCursor')
+    call <sid>MapNotHasmapto('gd', 'Markdown_CreatePathForUrlUnderCursor')
 endif
 
 command! -buffer -range=% HeaderDecrease call s:HeaderDecrease(<line1>, <line2>)
