@@ -585,6 +585,7 @@ if !exists("*s:CreatePathForUrlUnderCursor")
       if l:url != ''
 	    if !isdirectory(l:dir)
 		  call mkdir(l:dir, "p")
+        endif
         execute 'edit' l:url
       else
           echomsg 'The cursor is not on a link.'
